@@ -1,0 +1,8 @@
+.btn-orange {
+  background-color: orangered;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: medium;
+  border-radius: 10px;
+}
