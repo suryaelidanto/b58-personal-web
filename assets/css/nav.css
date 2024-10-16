@@ -1,3 +1,7 @@
+nav ul {
+  margin: 0;
+}
+
 .btn-orange {
   background-color: orangered;
   padding: 10px;

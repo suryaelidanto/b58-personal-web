@@ -19,7 +19,7 @@
         "
       >
         <li>
-          <img src="assets/img/logo.png" style="height: 30px;" />
+          <img src="assets/img/logo.png" style="height: 30px" />
         </li>
         <li>
           <a href="index.html"> Home </a>
@@ -27,31 +27,32 @@
         <li>
           <a href="blog.html"> Blog </a>
         </li>
-        <li style="display: flex; justify-content: flex-end; width: 80%;">
-            <a href="contact.html" class="btn-orange">Contact Me</a>
+        <li style="display: flex; justify-content: flex-end; width: 80%">
+          <a href="contact.html" class="btn-orange">Contact Me</a>
         </li>
       </ul>
     </nav>
 
     <div style="display: flex; justify-content: center; margin-top: 50px">
       <form
+        onsubmit="sendToMail(event)"
         style="display: flex; flex-direction: column; gap: 10px; width: 300px"
       >
         <div>
           <label>Name</label>
-          <input />
+          <input id="input-name" />
         </div>
         <div>
           <label>Email</label>
-          <input />
+          <input id="input-email" />
         </div>
         <div>
           <label>Phone Number</label>
-          <input />
+          <input id="input-phone" />
         </div>
         <div>
           <label>Subject</label>
-          <select>
+          <select id="input-subject">
             <option value="Fullstack Developer">Fullstack Developer</option>
             <option value="Frontend Developer">Frontend Developer</option>
             <option value="Backend Developer">Backend Developer</option>
@@ -59,10 +60,12 @@
         </div>
         <div>
           <label>Your message</label>
-          <textarea></textarea>
+          <textarea id="input-message"></textarea>
         </div>
         <button class="btn-orange">Submit</button>
       </form>
     </div>
+
+    <script src="assets/js/contact.js"></script>
   </body>
 </html>
