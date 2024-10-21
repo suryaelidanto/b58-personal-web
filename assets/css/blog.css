@@ -105,7 +105,7 @@
   }
   
   .blog .blog-list .blog-list-item .blog-image img {
-    width: 100%;
+    width: 300px;
     height: 300px;
     object-fit: cover;
   }
@@ -122,7 +122,7 @@
   
   .blog .blog-list .btn-group {
     text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 100px;
   }
   
   .blog .blog-list .btn-group .btn-edit {
@@ -196,5 +196,21 @@
     font-size: 24px;
     line-height: 140%;
     text-align: justify;
+  }
+
+  @media only screen and (max-width: 800px) {
+    .blog-list-item {
+      flex-direction: column;
+    }
+
+    .blog .blog-list .blog-list-item .blog-image img {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 520px) {
+    form {
+      padding: 30px;
+    }
   }
   
