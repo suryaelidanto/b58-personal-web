@@ -1,3 +1,18 @@
+.contact-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  padding: 0 20px;
+}
+
 label {
   display: block;
   font-weight: bold;
@@ -7,5 +22,14 @@ input,
 select,
 textarea {
   width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+@media only screen and (max-width: 480px) {
+  .contact-form form {
+    padding: 0 10px;
+  }
+}

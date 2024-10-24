@@ -6,7 +6,9 @@
   }
   
   .blog-form .form-container {
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 20px;
   }
   
   .blog-form .form-container h1 {
@@ -198,19 +200,28 @@
     text-align: justify;
   }
 
-  @media only screen and (max-width: 800px) {
-    .blog-list-item {
+  @media only screen and (max-width: 768px) {
+    .blog .blog-list .blog-list-item {
       flex-direction: column;
+      width: 90%;
     }
 
     .blog .blog-list .blog-list-item .blog-image img {
       width: 100%;
+      height: auto;
+    }
+
+    .blog-content p {
+      width: 100%;
     }
   }
 
-  @media only screen and (max-width: 520px) {
-    form {
-      padding: 30px;
+  @media only screen and (max-width: 480px) {
+    .blog-form .form-container {
+      padding: 0 10px;
+    }
+
+    .blog .blog-list .blog-list-item {
+      width: 95%;
     }
   }
-  
