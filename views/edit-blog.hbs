@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Creating Blog Page</title>
+    <title>Edit Blog Page</title>
     <link rel="stylesheet" href="/assets/css/index.css" />
     <link rel="stylesheet" href="/assets/css/nav.css" />
     <link rel="stylesheet" href="/assets/css/blog.css" />
@@ -44,15 +44,22 @@
     <div class="blog">
       <div class="blog-form">
         <div class="form-container">
-          <form method="post" action="/blog">
-            <h1>Create Post Blog</h1>
+          <form method="post" action="/edit-blog/{{index}}">
+            <h1>Edit Post Blog</h1>
             <div>
               <label for="input-blog-title">Title</label>
-              <input id="input-blog-title" name="title" />
+              <input
+                id="input-blog-title"
+                name="title"
+                value="{{blog.title}}"
+              />
             </div>
             <div>
               <label for="input-blog-content">Content</label>
-              <textarea id="input-blog-content" name="content"></textarea>
+              <textarea
+                id="input-blog-content"
+                name="content"
+              >{{blog.content}}</textarea>
             </div>
             <div>
               <label>Upload Image</label>
@@ -65,46 +72,10 @@
               </div>
             </div>
             <div class="button-group">
-              <button type="submit">Post Blog</button>
+              <button type="submit">Edit Blog</button>
             </div>
           </form>
         </div>
-      </div>
-
-      <hr class="line" />
-      <div id="contents" class="blog-list">
-        {{#each blogs}}
-          <div class="blog-list-item">
-            <div class="blog-image">
-              <img src="{{image}}" alt="" />
-            </div>
-            <div class="blog-content">
-              <div
-                class="btn-group"
-                style="display: flex; justify-content: flex-end"
-              >
-                <a href="/edit-blog/{{@index}}" class="btn-edit">Edit Post</a>
-                <form method="post" action="/delete-blog/{{@index}}">
-                  <button type="submit" class="btn-post">Delete Post</button>
-                </form>
-              </div>
-              <h1>
-                <a href="blog-detail.html" target="_blank">{{title}}</a>
-              </h1>
-              <div class="detail-blog-content">
-                {{get_full_time createdAt}}
-                |
-                {{author}}
-              </div>
-              <p>
-                {{content}}
-              </p>
-              <p>
-                {{get_distance_time createdAt}}
-              </p>
-            </div>
-          </div>
-        {{/each}}
       </div>
     </div>
 
