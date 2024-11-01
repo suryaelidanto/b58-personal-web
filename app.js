@@ -2,12 +2,16 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path");
-require("./libs/hbs-helper");
+require("./src/libs/hbs-helper");
+const config = require("./src/config/config.json");
+const { Sequelize, QueryTypes } = require("sequelize");
+const sequelize = new Sequelize(config.development);
 
 app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "./src/views"));
 
-app.use("/assets", express.static(path.join(__dirname, "./assets")));
-app.use("/views", express.static("views"));
+app.use("/assets", express.static(path.join(__dirname, "./src/assets")));
+
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", home);
@@ -17,11 +21,11 @@ app.get("/testimonial", testimonial);
 // BLOG
 app.get("/blog", blog);
 app.post("/blog", blogPost);
-app.post("/delete-blog/:index", blogDelete);
-app.get("/edit-blog/:index", editBlog);
-app.post("/edit-blog/:index", editBlogPost);
+app.post("/delete-blog/:id", blogDelete);
+app.get("/edit-blog/:id", editBlog);
+app.post("/edit-blog/:id", editBlogPost);
 
-app.get("/blog-detail/:index", blogDetail);
+app.get("/blog-detail/:id", blogDetail);
 
 const blogs = [];
 
@@ -29,7 +33,15 @@ function home(req, res) {
   res.render("index");
 }
 
-function blog(req, res) {
+async function blog(req, res) {
+  const query = `SELECT * FROM blogs`;
+  let blogs = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+  blogs = blogs.map((blog) => ({
+    ...blog,
+    author: "Surya Elidanto",
+  }));
+
   res.render("blog", { blogs });
 }
 
@@ -41,58 +53,54 @@ function testimonial(req, res) {
   res.render("testimonial");
 }
 
-function blogDetail(req, res) {
-  const { index } = req.params;
+async function blogDetail(req, res) {
+  const { id } = req.params;
 
-  res.render("blog-detail", { id: index });
+  const query = `SELECT * FROM blogs WHERE id = ${id}`;
+  const blog = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+  blog[0].author = "Surya Elidanto";
+  res.render("blog-detail", { blog: blog[0] });
 }
 
-function blogPost(req, res) {
+async function blogPost(req, res) {
   const { title, content } = req.body;
 
-  blogs.unshift({
-    title,
-    content,
-    createdAt: new Date(),
-    author: "Naruto",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg/800px-Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-  });
+  const query = `INSERT INTO blogs(title,content,image,author_id) VALUES('${title}','${content}','https://image.popmama.com/content-images/post/20211228/borutojpg-d974626c1f44f2ebc3c0577eab8a45aa.jpg?width=800&height=420',100)`;
+
+  await sequelize.query(query, { type: QueryTypes.INSERT });
 
   res.redirect("/blog");
 }
 
-function blogDelete(req, res) {
-  const { index } = req.params;
+async function blogDelete(req, res) {
+  const { id } = req.params;
 
-  blogs.splice(index, 1);
+  const query = `DELETE FROM blogs WHERE id=${id}`;
+  await sequelize.query(query, { type: QueryTypes.DELETE });
 
   res.redirect("/blog");
 }
 
-function editBlog(req, res) {
-  const { index } = req.params;
+async function editBlog(req, res) {
+  const { id } = req.params;
 
-  const blog = blogs.find((_, idx) => idx == index);
+  const query = `SELECT * FROM blogs WHERE id=${id}`;
+  const blog = await sequelize.query(query, { type: QueryTypes.SELECT });
+  blog[0].author = "Surya Elidanto";
 
-  res.render("edit-blog", { blog, index });
+  res.render("edit-blog", { blog: blog[0] });
 }
 
-function editBlogPost(req, res) {
-  const { index } = req.params;
+async function editBlogPost(req, res) {
+  const { id } = req.params;
 
   const { title, content } = req.body;
 
-  blogs[index] = {
-    title,
-    content,
-    createdAt: new Date(),
-    author: "Naruto",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg/800px-Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-  };
+  const query = `UPDATE blogs SET title='${title}',content='${content}' WHERE id=${id}`;
+  await sequelize.query(query, { type: QueryTypes.UPDATE });
 
-  res.redirect("/blog")
+  res.redirect("/blog");
 }
 
 app.listen(port, () => {

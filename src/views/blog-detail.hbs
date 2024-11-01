@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creating Blog Page - detail</title>
-    <link rel="stylesheet" href="assets/css/index.css" />
-    <link rel="stylesheet" href="assets/css/nav.css" />
-    <link rel="stylesheet" href="assets/css/blog.css" />
+    <link rel="stylesheet" href="/assets/css/index.css" />
+    <link rel="stylesheet" href="/assets/css/nav.css" />
+    <link rel="stylesheet" href="/assets/css/blog.css" />
 </head>
 
 <body>
     <nav>
         <ul>
             <li>
-                <img src="assets/img/logo.png" style="height: 30px" />
+                <img src="/assets/img/logo.png" style="height: 30px" />
             </li>
             <li>
                 <a href="/" class="nav-link"> Home </a>
@@ -42,15 +42,15 @@
 
     <div class="blog-detail">
         <div class="blog-detail-container">
-            <h1>{{title}}</h1>
-            <div class="author">12 Jul 2021 22:30 WIB | Ichsan Emrald Alamsyah</div>
-            <img src="assets/img/blog-detail.png" alt="detail" />
+            <h1>{{blog.title}}</h1>
+            <div class="author">{{blog.created_at}} | {{blog.author}}</div>
+            <img src="{{blog.image}}" alt="detail" />
             <p>
-                {{content}}
+                {{blog.content}}
             </p>
         </div>
     </div>
 
-    <script src="assets/js/nav.js"></script>
+    <script src="/assets/js/nav.js"></script>
 </body>
 </html>
