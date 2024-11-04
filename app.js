@@ -6,15 +6,37 @@ require("./src/libs/hbs-helper");
 const config = require("./src/config/config.json");
 const { Sequelize, QueryTypes } = require("sequelize");
 const sequelize = new Sequelize(config.development);
+const bcrypt = require("bcrypt");
+const session = require("express-session");
+const flash = require("express-flash");
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./src/views"));
 
 app.use("/assets", express.static(path.join(__dirname, "./src/assets")));
-
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    name: "my-session",
+    secret: "rahasiabangetdehjangansampaiadayangtahu",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24, // 1 hari
+    },
+  })
+);
+
+app.use(flash());
 
 app.get("/", home);
+app.get("/login", login);
+app.get("/register", register);
+app.post("/register", registerPost);
+app.post("/login", loginPost);
+app.post("/logout", logoutPost);
+
 app.get("/contact", contact);
 app.get("/testimonial", testimonial);
 
@@ -27,10 +49,65 @@ app.post("/edit-blog/:id", editBlogPost);
 
 app.get("/blog-detail/:id", blogDetail);
 
-const blogs = [];
+function login(req, res) {
+  res.render("login");
+}
+
+function register(req, res) {
+  res.render("register");
+}
+
+async function registerPost(req, res) {
+  const { name, email, password } = req.body;
+  const salt = 10;
+
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const query = `INSERT INTO users(name, email, password) VALUES('${name}', '${email}', '${hashedPassword}')`;
+  await sequelize.query(query, { type: QueryTypes.INSERT });
+
+  res.redirect("login");
+}
+
+async function loginPost(req, res) {
+  const { email, password } = req.body;
+
+  // verifikasi email
+  const query = `SELECT * FROM users WHERE email='${email}'`;
+  const user = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+  if (!user.length) {
+    req.flash("error", "Email / password salah!");
+    return res.redirect("/login");
+  }
+
+  const isVerifiedPassword = await bcrypt.compare(password, user[0].password);
+
+  if (!isVerifiedPassword) {
+    req.flash("error", "Email / password salah!");
+    return res.redirect("/login");
+  }
+
+  req.flash("success", "Berhasil login!");
+  req.session.user = user[0];
+  res.redirect("/");
+}
+
+function logoutPost(req, res) {
+  req.session.destroy((err) => {
+    if (err) return console.error("Logout gagal!");
+
+    console.log("Logout berhasil!");
+
+    res.redirect("/");
+  });
+}
 
 function home(req, res) {
-  res.render("index");
+  const user = req.session.user;
+  console.log(user);
+
+  res.render("index", { user });
 }
 
 async function blog(req, res) {
