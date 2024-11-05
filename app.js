@@ -9,11 +9,14 @@ const sequelize = new Sequelize(config.development);
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
+const upload = require("./src/middlewares/upload-file");
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./src/views"));
 
 app.use("/assets", express.static(path.join(__dirname, "./src/assets")));
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
@@ -42,7 +45,7 @@ app.get("/testimonial", testimonial);
 
 // BLOG
 app.get("/blog", blog);
-app.post("/blog", blogPost);
+app.post("/blog", upload.single("image"), blogPost);
 app.post("/delete-blog/:id", blogDelete);
 app.get("/edit-blog/:id", editBlog);
 app.post("/edit-blog/:id", editBlogPost);
@@ -111,15 +114,12 @@ function home(req, res) {
 }
 
 async function blog(req, res) {
-  const query = `SELECT * FROM blogs`;
+  const query = `SELECT blogs.*, users.name AS author FROM blogs LEFT JOIN users ON blogs.author_id = users.id;`;
   let blogs = await sequelize.query(query, { type: QueryTypes.SELECT });
 
-  blogs = blogs.map((blog) => ({
-    ...blog,
-    author: "Surya Elidanto",
-  }));
+  const user = req.session.user;
 
-  res.render("blog", { blogs });
+  res.render("blog", { blogs, user });
 }
 
 function contact(req, res) {
@@ -143,7 +143,11 @@ async function blogDetail(req, res) {
 async function blogPost(req, res) {
   const { title, content } = req.body;
 
-  const query = `INSERT INTO blogs(title,content,image,author_id) VALUES('${title}','${content}','https://image.popmama.com/content-images/post/20211228/borutojpg-d974626c1f44f2ebc3c0577eab8a45aa.jpg?width=800&height=420',100)`;
+  const { id } = req.session.user;
+
+  const imagePath = req.file.path;
+
+  const query = `INSERT INTO blogs(title,content,image,author_id) VALUES('${title}','${content}','${imagePath}', ${id})`;
 
   await sequelize.query(query, { type: QueryTypes.INSERT });
 
@@ -160,6 +164,12 @@ async function blogDelete(req, res) {
 }
 
 async function editBlog(req, res) {
+  const user = req.session.user;
+
+  if (!user) {
+    return res.redirect("/login");
+  }
+
   const { id } = req.params;
 
   const query = `SELECT * FROM blogs WHERE id=${id}`;
