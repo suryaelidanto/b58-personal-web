@@ -1,75 +1,99 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Me</title>
-    <link rel="stylesheet" href="assets/css/index.css" />
-    <link rel="stylesheet" href="assets/css/nav.css" />
-    <link rel="stylesheet" href="assets/css/contact.css" />
-</head>
-<body>
-    <nav>
-        <ul>
-            <li>
-                <img src="assets/img/logo.png" style="height: 30px" />
-            </li>
-            <li>
-                <a href="/" class="nav-link"> Home </a>
-            </li>
-            <li>
-                <a href="/blog" class="nav-link"> Blog </a>
-            </li>
-            <li style="display: flex; justify-content: flex-end; width: 80%">
-                <a href="/contact" class="btn-orange nav-link">Contact Me</a>
-                <button onclick="hamburgerToggle()" class="hamburger-button"><i class="fa-solid fa-bars"></i></button>
-            </li>
-        </ul>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .btn-custom { background-color: #FF4500; /* Orange Reds */ color: white
+      !important; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="/"><img
+            src="assets/img/logo.png"
+            style="height: 30px"
+          /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+            <li class="nav-item"><a
+                href="/contact"
+                class="btn btn-custom nav-link"
+              >Contact Me</a></li>
+            {{#if user}}
+              <li class="nav-item"><span class="navbar-text">Welcome {{user.name}}</span></li>
+              <li class="nav-item">
+                <form action="/logout" method="post" class="d-inline">
+                  <button type="submit" class="btn btn-link nav-link">Logout</button>
+                </form>
+              </li>
+            {{else}}
+              <li class="nav-item"><a href="/login" class="btn btn-custom nav-link">Login</a></li>
+              <li class="nav-item"><a href="/register" class="btn btn-custom nav-link">Register</a></li>
+            {{/if}}
+          </ul>
+        </div>
+      </div>
     </nav>
 
-    <div id="hamburger-container" class="hamburger-container hide">
-        <h1 class="hamburger-container-item ">
-            <a style="color: black" href="/"> Home </a>
-        </h1>
-        <h1 class="hamburger-container-item">
-            <a style="color: black" href="/blog"> Blog </a>
-        </h1>
-        <h1 class="hamburger-container-item hamburger-active">
-            <a style="color: white" href="/contact"> Contact Me </a>
-        </h1>
+    <div class="container mt-4">
+      <div class="card">
+        <div class="card-body">
+          <form onsubmit="sendToMail(event)">
+            <div class="form-group">
+              <label for="input-name">Name</label>
+              <input id="input-name" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="input-email">Email</label>
+              <input id="input-email" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="input-phone">Phone Number</label>
+              <input id="input-phone" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="input-subject">Subject</label>
+              <select id="input-subject" class="form-control">
+                <option value="Fullstack Developer">Fullstack Developer</option>
+                <option value="Frontend Developer">Frontend Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input-message">Your message</label>
+              <textarea id="input-message" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-custom mt-3">Submit</button>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div class="contact-form">
-        <form onsubmit="sendToMail(event)">
-            <div>
-                <label>Name</label>
-                <input id="input-name" />
-            </div>
-            <div>
-                <label>Email</label>
-                <input id="input-email" />
-            </div>
-            <div>
-                <label>Phone Number</label>
-                <input id="input-phone" />
-            </div>
-            <div>
-                <label>Subject</label>
-                <select id="input-subject">
-                    <option value="Fullstack Developer">Fullstack Developer</option>
-                    <option value="Frontend Developer">Frontend Developer</option>
-                    <option value="Backend Developer">Backend Developer</option>
-                </select>
-            </div>
-            <div>
-                <label>Your message</label>
-                <textarea id="input-message"></textarea>
-            </div>
-            <button class="btn-orange">Submit</button>
-        </form>
-    </div>
-
-    <script src="assets/js/contact.js"></script>
-    <script src="assets/js/nav.js"></script>
-</body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    ></script>
+  </body>
 </html>

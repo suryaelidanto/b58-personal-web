@@ -36,7 +36,7 @@ hbs.registerHelper("get_full_time", (date) => {
 
 hbs.registerHelper("get_distance_time", (timePost) => {
   const timeNow = new Date();
-  const distance = timeNow - timePost; // hasilnya miliseconds -> 1000ms = 1 detik
+  const distance = timeNow - timePost;
 
   const seconds = Math.floor(distance / 1000);
   const minutes = Math.floor(seconds / 60);

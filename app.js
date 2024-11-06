@@ -26,12 +26,17 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: false,
-      maxAge: 1000 * 60 * 60 * 24, // 1 hari
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
 
 app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
 
 app.get("/", home);
 app.get("/login", login);
@@ -43,7 +48,6 @@ app.post("/logout", logoutPost);
 app.get("/contact", contact);
 app.get("/testimonial", testimonial);
 
-// BLOG
 app.get("/blog", blog);
 app.post("/blog", upload.single("image"), blogPost);
 app.post("/delete-blog/:id", blogDelete);
@@ -75,7 +79,6 @@ async function registerPost(req, res) {
 async function loginPost(req, res) {
   const { email, password } = req.body;
 
-  // verifikasi email
   const query = `SELECT * FROM users WHERE email='${email}'`;
   const user = await sequelize.query(query, { type: QueryTypes.SELECT });
 
@@ -107,19 +110,14 @@ function logoutPost(req, res) {
 }
 
 function home(req, res) {
-  const user = req.session.user;
-  console.log(user);
-
-  res.render("index", { user });
+  res.render("index");
 }
 
 async function blog(req, res) {
   const query = `SELECT blogs.*, users.name AS author FROM blogs LEFT JOIN users ON blogs.author_id = users.id;`;
   let blogs = await sequelize.query(query, { type: QueryTypes.SELECT });
 
-  const user = req.session.user;
-
-  res.render("blog", { blogs, user });
+  res.render("blog", { blogs });
 }
 
 function contact(req, res) {

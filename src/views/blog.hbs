@@ -1,126 +1,98 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Creating Blog Page</title>
-    <link rel="stylesheet" href="/assets/css/index.css" />
-    <link rel="stylesheet" href="/assets/css/nav.css" />
-    <link rel="stylesheet" href="/assets/css/blog.css" />
-  </head>
-
-  <body>
-    <nav>
-      <ul>
-        <li>
-          <img src="/assets/img/logo.png" style="height: 30px" />
-        </li>
-        <li>
-          <a href="/" class="nav-link"> Home </a>
-        </li>
-        <li>
-          <a href="/blog" class="nav-link"> Blog </a>
-        </li>
-        <li style="display: flex; justify-content: flex-end; width: 80%">
-          <a href="/contact" class="btn-orange nav-link">Contact Me</a>
-          <button onclick="hamburgerToggle()" class="hamburger-button"><i
-              class="fa-solid fa-bars"
-            ></i></button>
-        </li>
-      </ul>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-custom {
+            background-color: #FF4500; /* Orange Red */
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" style="height: 30px" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="/contact" class="btn btn-custom nav-link">Contact Me</a></li>
+                    {{#if user}}
+                        <li class="nav-item"><span class="navbar-text">Welcome {{user.name}}</span></li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    {{else}}
+                        <li class="nav-item"><a href="/login" class="btn btn-custom nav-link">Login</a></li>
+                        <li class="nav-item"><a href="/register" class="btn btn-custom nav-link">Register</a></li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <div id="hamburger-container" class="hamburger-container hide">
-      <h1 class="hamburger-container-item">
-        <a style="color: black" href="/"> Home </a>
-      </h1>
-      <h1 class="hamburger-container-item hamburger-active">
-        <a style="color: white" href="/blog"> Blog </a>
-      </h1>
-      <h1 class="hamburger-container-item">
-        <a style="color: black" href="/contact"> Contact Me </a>
-      </h1>
-    </div>
-
-    <div class="blog">
-
-      {{#if user}}
-
-      <div class="blog-form">
-        <div class="form-container">
-          <form method="post" action="/blog" enctype="multipart/form-data">
-            <h1>Create Post Blog</h1>
-            <div>
-              <label for="input-blog-title">Title</label>
-              <input id="input-blog-title" name="title" />
-            </div>
-            <div>
-              <label for="input-blog-content">Content</label>
-              <textarea id="input-blog-content" name="content"></textarea>
-            </div>
-            <div>
-              <label>Upload Image</label>
-              <div class="input-blog-image-group">
-                <label for="input-blog-image">
-                  <p>Attach File</p>
-                  <img src="/assets/icon/file.png" alt="file" />
-                </label>
-                <input type="file" id="input-blog-image" name="image" hidden />
-              </div>
-            </div>
-            <div class="button-group">
-              <button type="submit">Post Blog</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <hr class="line" />
-
-      {{/if}}
-
-
-      <div id="contents" class="blog-list">
-        {{#each blogs}}
-          <div class="blog-list-item">
-            <div class="blog-image">
-              <img src="{{image}}" alt="" />
-            </div>
-            <div class="blog-content">
-              {{#if ../user}}
-              <div
-                class="btn-group"
-                style="display: flex; justify-content: flex-end"
-              >
-                <a href="/edit-blog/{{id}}" class="btn-edit">Edit Post</a>
-                <form method="post" action="/delete-blog/{{id}}">
-                  <button type="submit" class="btn-post">Delete Post</button>
+    <div class="container mt-4">
+        {{#if user}}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1>Create Post Blog</h1>
+                <form method="post" action="/blog" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="input-blog-title">Title</label>
+                        <input id="input-blog-title" name="title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="input-blog-content">Content</label>
+                        <textarea id="input-blog-content" name="content" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Image</label>
+                        <div class="custom-file">
+                            <input type="file" id="input-blog-image" name="image" class="custom-file-input" />
+                            <label class="custom-file-label" for="input-blog-image">Choose file</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-custom mt-3">Post Blog</button>
                 </form>
-              </div>
-              {{/if}}
-              <h1>
-                <a href="/blog-detail/{{id}}" target="_blank">{{title}}</a>
-              </h1>
-              <div class="detail-blog-content">
-                {{get_full_time createdAt}}
-                |
-                {{#if author}}
-                  {{author}}
-                {{else}}
-                  Unknown User
-                {{/if}}
-              </div>
-              <p>
-                {{content}}
-              </p>
-              <p>
-                {{get_distance_time createdAt}}
-              </p>
             </div>
-          </div>
-        {{/each}}
-      </div>
+        </div>
+        {{/if}}
+
+        <div class="row">
+            {{#each blogs}}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{image}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="/blog-detail/{{id}}" target="_blank">{{title}}</a></h5>
+                        <p class="card-text">{{content}}</p>
+                        <p class="text-muted">{{get_full_time createdAt}} | {{#if author}}{{author}}{{else}}Unknown User{{/if}}</p>
+                        {{#if ../user}}
+                        <div class="d-flex justify-content-end">
+                            <a href="/edit-blog/{{id}}" class="btn btn-custom btn-sm mr-2">Edit</a>
+                            <form method="post" action="/delete-blog/{{id}}" class="d-inline">
+                                <button type="submit" class="btn btn-custom btn-sm">Delete</button>
+                            </form>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
 
-    <script src="/assets/js/nav.js"></script>
-  </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
