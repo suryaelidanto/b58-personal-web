@@ -3,11 +3,9 @@ const app = express();
 const port = 3000;
 const path = require("path");
 require("./src/libs/hbs-helper");
-const config = require("./src/config/config.json");
+const config = require("./config/config");
 const { Sequelize, QueryTypes } = require("sequelize");
-const sequelize = new Sequelize(config.development, {
-  dialectModule: require("pg")
-});
+const sequelize = new Sequelize(config.development);
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
